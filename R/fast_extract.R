@@ -9,7 +9,7 @@
 #' @param small.algo Logical. Use 'small' algorithm to detect overlap between polygons and raster cells? See [velox::VeloxRaster_extract()]. Default is FALSE.
 #' @param col.names Optional. Character vector with names for extracted columns in the output dataframe. If not provided, the function will use the Raster* layer names or, if `ras` is a list of paths, the file name followed by layer names.
 #' @param parallel Logical. Run function in parallel (using `future.apply`)? Default is TRUE.
-#' @param n.cores Number of cores to use when parallel = TRUE. If not specified, using all available cores (see [future::multiprocess()]).
+#' @param n.cores Number of cores to use when parallel = TRUE. If not specified, using all available cores (see [future::multisession()]).
 #'
 #' @return A sf data frame with the same number of rows as the original, and new columns containing the extracted raster values.
 #' @export
@@ -84,9 +84,9 @@ fast_extract <- function(sf = NULL, ras = NULL,
       if (n.cores > future::availableCores()) {
         stop("\n 'n.cores' can't be higher than the number of available cores: ", future::availableCores(), ".\n")
       }
-      future::plan(future::multiprocess, workers = n.cores)
+      future::plan(future::multisession, workers = n.cores)
     } else {
-      future::plan(future::multiprocess)
+      future::plan(future::multisession)
     }
   }
 
